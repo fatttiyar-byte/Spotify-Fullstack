@@ -11,7 +11,7 @@ https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge
 
 A modern, full-stack music streaming platform inspired by Spotify — built with the MERN stack and Tailwind CSS.
 
-Features • Tech Stack • Architecture • Getting Started • API Docs • Roadmap
+Features • Tech Stack • Getting Started • API Docs • Roadmap • Contributing
 
 </div>
 📖 Overview
