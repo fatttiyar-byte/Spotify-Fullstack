@@ -73,5 +73,5 @@ Built on the **MERN stack** (MongoDB, Express, React, Node.js) and styled with *
 
 
 ```bash
-git clone https://github.com/fatttiyar-byte/spotify-clone.git
+git clone https://github.com/fatttiyar-byte/Spotify-Fullstack.git
 cd spotify-clone
