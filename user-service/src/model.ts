@@ -2,52 +2,54 @@ import mongoose, { Document, Schema } from "mongoose";
 
 
 
-interface IUser extends Document{
-      name:string;
-      email:string;
-      password:string;
-      role:"user" | "admin";
-      playlist:string[]
+ export interface IUser extends Document {
+      name: string;
+      email: string;
+      password: string;
+      role: "user" | "admin";
+      playlist: string[]
 }
 
-const schema :Schema<IUser> = new Schema({
-      name:{
+const schema: Schema<IUser> = new Schema({
+      name: {
             type: String,
             required: true,
 
       },
 
-      email:{
-            lowercase :true ,
-            trim :true,
-            required:true,
-            unique: true ,
-            type:String,
+      email: {
+            lowercase: true,
+            trim: true,
+            required: true,
+            unique: true,
+            type: String,
       },
 
-      password:{
-            type :String ,
-            required:true,
-            minlength:8
+      password: {
+            type: String,
+            required: true,
+            minlength: 8
       },
-      role:{
-            type:String,
+      role: {
+            type: String,
 
-            enum:["user" , "admin"] ,
+            enum: ["user", "admin"],
 
-            default :"user" ,
+            default: "user",
       },
 
 
-      playlist:[
-            {type:String,
-            required:true,
+      playlist: [
+            {
+                  type: String,
+                  required: true,
             }
-      ]},
-      
-      { timestamps:true });
+      ]
+},
 
-      export const User =mongoose.model<IUser>("User" , schema)
+      { timestamps: true });
+
+export const User = mongoose.model<IUser>("User", schema)
 
 
 
