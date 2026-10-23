@@ -1,7 +1,7 @@
 import express from "express"
-import { registerUser } from "./register.js"
-import { loginUser } from "./login.js"
-import { myProfile } from "./controller.js"
+import { registerUser } from "./controller/register.js"
+import { loginUser } from "./controller/login.js"
+import { myProfile } from "./controller/profile.js"
 import isAuth from "./middleware.js"
 
 const router = express.Router()

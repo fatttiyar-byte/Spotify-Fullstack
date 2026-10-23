@@ -6,7 +6,8 @@ import dotenv from 'dotenv'
 import { sql } from "./config/db.js";
 //وارد کردن شی یا تابع sql
 //ارتباط با پایگاه داده ==>postgreSQL
-import adminRoute from "./route.js";
+
+import router from "./route.js";
 //مسیر ها
 import {v2 as cloudinary}  from "cloudinary";
 //مدیریت تصاویر و فایلهای رسانه ای در فضای ابری
@@ -22,7 +23,7 @@ cloudinary.config({
     //نام فضای کلودینری رو مشخص میکنه
     api_key: process.env.CLOUD_API_KEY as string,
     //کلید ای پی ای حساب رو مشخص میکنه
-    api_secret: process.env.CLOUD_API_SEC as string
+    api_secret: process.env.CLOUD_API_SECRET as string
     //کلید محرمانه ای پی آی که نباید در سمت کد فرانت و یا در گیت هاب قرار بگیره
 })
 
@@ -86,7 +87,7 @@ async function initDB(){
 
 
 
-app.use('/api/v1/' , adminRoute)
+app.use('/api/v1/' , router)
 
 
 
@@ -94,7 +95,7 @@ app.use('/api/v1/' , adminRoute)
 
 
 
-const port =process.env.PORT || 3100
+const port =process.env.PORT || 4000
 
 
 const startServer =async()=>{
