@@ -1,8 +1,11 @@
 
 import type { Response } from "express";
+import type {
+  UploadApiErrorResponse,
+  UploadApiResponse,
+} from "cloudinary";
 
 import cloudinary from "../config/cloudinary.js";
-
 import type { AuthenticatedRequest } from "../middleware.js";
 
 interface UploadedFile {
@@ -61,7 +64,10 @@ export const uploadProfileImage = async (
             overwrite: true,
             resource_type: "image",
           },
-          (error, result) => {
+          (
+            error: UploadApiErrorResponse | undefined,
+            result: UploadApiResponse | undefined
+          ) => {
             if (error) {
               reject(error);
               return;
