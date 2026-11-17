@@ -1,4 +1,4 @@
-import type { Song } from "../components/SongCard";
+import type { Song } from "../components/music/SongCard";
 
 const FAVORITES_KEY = "topmusic-favorites";
 const HISTORY_KEY = "topmusic-history";

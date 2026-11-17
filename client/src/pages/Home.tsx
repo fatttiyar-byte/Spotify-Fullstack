@@ -7,6 +7,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  type Variants,
 } from "framer-motion";
 import toast from "react-hot-toast";
 
@@ -158,7 +159,7 @@ const spring = {
   damping: 26,
 } as const;
 
-const wordStagger = {
+const wordStagger: Variants = {
   hidden: {},
   show: {
     transition: {
@@ -168,7 +169,7 @@ const wordStagger = {
   },
 };
 
-const wordItem = {
+const wordItem: Variants = {
   hidden: {
     opacity: 0,
     y: 24,

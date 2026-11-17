@@ -1,3 +1,4 @@
+
 import {
   createContext,
   useContext,
@@ -5,12 +6,14 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import api from "../services/api";
+
+import { userApi } from "../services/api";
 
 export type UserRole = "user" | "admin";
 
 export interface User {
   _id: string;
+  id?: string;
   name: string;
   email: string;
   role: UserRole;
@@ -25,9 +28,15 @@ interface AuthContextType {
   refreshUser: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +49,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await api.get("/user/me");
+      const response = await userApi.get("/user/me", {
+        headers: { token },
+      });
 
       const currentUser = response.data.user ?? response.data;
 
@@ -51,7 +62,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error("Invalid user role");
       }
 
-      setUser(currentUser);
+      setUser({
+        ...currentUser,
+        _id: currentUser._id ?? currentUser.id,
+      });
     } catch (error) {
       localStorage.removeItem("noir-token");
       setUser(null);
@@ -61,12 +75,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     refreshUser()
-      .catch((error) => console.error("Auth check failed:", error))
+      .catch((error) =>
+        console.error("Auth check failed:", error)
+      )
       .finally(() => setLoading(false));
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await api.post("/user/login", {
+    const response = await userApi.post("/user/login", {
       email,
       password,
     });
@@ -80,30 +96,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     localStorage.setItem("noir-token", token);
 
-    let currentUser: User;
+    try {
+      let currentUser = loggedUser;
 
-    if (loggedUser?.role) {
-      currentUser = loggedUser;
-    } else {
-      const profileResponse = await api.get("/user/me");
-      currentUser = profileResponse.data.user ?? profileResponse.data;
-    }
+      if (!currentUser?.role) {
+        const profileResponse = await userApi.get("/user/me", {
+          headers: { token },
+        });
 
-    if (
-      currentUser.role !== "user" &&
-      currentUser.role !== "admin"
-    ) {
+        currentUser =
+          profileResponse.data.user ?? profileResponse.data;
+      }
+
+      if (
+        currentUser.role !== "user" &&
+        currentUser.role !== "admin"
+      ) {
+        throw new Error("Invalid user role");
+      }
+
+      const normalizedUser: User = {
+        ...currentUser,
+        _id: currentUser._id ?? currentUser.id,
+      };
+
+      setUser(normalizedUser);
+      return normalizedUser;
+    } catch (error) {
       localStorage.removeItem("noir-token");
-      throw new Error("Invalid user role");
+      setUser(null);
+      throw error;
     }
-
-    setUser(currentUser);
-    return currentUser;
   };
 
   const logout = async () => {
     try {
-      await api.post("/user/logout");
+      await userApi.post("/user/logout");
     } finally {
       localStorage.removeItem("noir-token");
       setUser(null);
@@ -130,7 +158,9 @@ export function useAuth() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
+    throw new Error(
+      "useAuth must be used inside AuthProvider"
+    );
   }
 
   return context;

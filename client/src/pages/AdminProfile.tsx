@@ -67,19 +67,17 @@ const AdminProfile = () => {
   const inputClass = `
     w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all
     focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10
-    ${
-      isDark
-        ? "border-slate-700 bg-slate-950/70 text-white placeholder:text-slate-500"
-        : "border-slate-200 bg-white text-slate-800 placeholder:text-slate-400"
+    ${isDark
+      ? "border-slate-700 bg-slate-950/70 text-white placeholder:text-slate-500"
+      : "border-slate-200 bg-white text-slate-800 placeholder:text-slate-400"
     }
   `;
 
   const cardClass = `
     rounded-2xl border p-5 sm:p-6 backdrop-blur-xl transition-colors
-    ${
-      isDark
-        ? "border-slate-700/70 bg-slate-900/80"
-        : "border-slate-200 bg-white/90 shadow-sm"
+    ${isDark
+      ? "border-slate-700/70 bg-slate-900/80"
+      : "border-slate-200 bg-white/90 shadow-sm"
     }
   `;
 
@@ -92,37 +90,36 @@ const AdminProfile = () => {
       return;
     }
 
+    if (!user) {
+      toast.error("اطلاعات کاربر پیدا نشد");
+      return;
+    }
+
     try {
       setIsSaving(true);
 
-      const response = await updateProfile({
+      await updateProfile({
         name: name.trim(),
         email: email.trim(),
       });
 
-    if (!user) {
-  toast.error("اطلاعات کاربر پیدا نشد");
-  return;
-}
-
-setUser({
-  ...user,
-  name: name.trim(),
-  email: email.trim(),
-});
+      setUser({
+        ...user,
+        name: name.trim(),
+        email: email.trim(),
+      });
 
       setIsEditing(false);
       toast.success("اطلاعات پروفایل با موفقیت ذخیره شد");
     } catch (error: any) {
       toast.error(
         error?.response?.data?.message ||
-          "خطا در ذخیره اطلاعات پروفایل"
+        "خطا در ذخیره اطلاعات پروفایل"
       );
     } finally {
       setIsSaving(false);
     }
   };
-
   const handleCancelEdit = () => {
     setName(user?.name || "");
     setEmail(user?.email || "");
@@ -166,7 +163,7 @@ setUser({
     } catch (error: any) {
       toast.error(
         error?.response?.data?.message ||
-          "تغییر رمز عبور انجام نشد"
+        "تغییر رمز عبور انجام نشد"
       );
     } finally {
       setIsChangingPassword(false);
@@ -194,9 +191,8 @@ setUser({
   return (
     <main
       dir="rtl"
-      className={`relative isolate min-h-screen overflow-hidden px-4 py-8 sm:px-6 lg:px-8 ${
-        isDark ? "bg-[#080f1d] text-white" : "bg-slate-50 text-slate-800"
-      }`}
+      className={`relative isolate min-h-screen overflow-hidden px-4 py-8 sm:px-6 lg:px-8 ${isDark ? "bg-[#080f1d] text-white" : "bg-slate-50 text-slate-800"
+        }`}
     >
       {/* Animated background */}
       <style>
@@ -255,66 +251,62 @@ setUser({
         className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
       >
         <div
-          className={`admin-glow-one absolute -right-32 -top-32 h-96 w-96 rounded-full blur-[110px] ${
-            isDark ? "bg-blue-600/15" : "bg-blue-500/10"
-          }`}
+          className={`admin-glow-one absolute -right-32 -top-32 h-96 w-96 rounded-full blur-[110px] ${isDark ? "bg-blue-600/15" : "bg-blue-500/10"
+            }`}
         />
 
         <div
-          className={`admin-glow-two absolute -bottom-40 -left-32 h-[450px] w-[450px] rounded-full blur-[120px] ${
-            isDark ? "bg-cyan-500/10" : "bg-cyan-400/15"
-          }`}
+          className={`admin-glow-two absolute -bottom-40 -left-32 h-[450px] w-[450px] rounded-full blur-[120px] ${isDark ? "bg-cyan-500/10" : "bg-cyan-400/15"
+            }`}
         />
 
         <div
-          className={`admin-glow-three absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full blur-[110px] ${
-            isDark ? "bg-sky-500/10" : "bg-sky-400/10"
-          }`}
+          className={`admin-glow-three absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full blur-[110px] ${isDark ? "bg-sky-500/10" : "bg-sky-400/10"
+            }`}
         />
       </div>
 
       <div className="relative mx-auto max-w-5xl space-y-0">
 
-      {/* Admin Header */}
-<div className="flex items-center justify-start gap-4 pb-5">
-  {/* Circular 3D Avatar */}
-  <div
-    className={`relative flex h-15 w-15 shrink-0 items-center justify-center rounded-full  ${
-      isDark
-        ? "border-slate-600 bg-slate-800"
-        : "border-white bg-slate-100"
-    }`}
-  >
-    <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-white/20 bg-gradient-to-br from-cyan-400 via-blue-600 to-slate-950 text-2xl font-black text-white">
-      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/30" />
+        {/* Admin Header */}
+        <div className="flex items-center justify-start gap-4 pb-5">
+          {/* Circular 3D Avatar */}
+          <div
+            className={`relative flex h-15 w-15 shrink-0 items-center justify-center rounded-full  ${isDark
+              ? "border-slate-600 bg-slate-800"
+              : "border-white bg-slate-100"
+              }`}
+          >
+            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-white/20 bg-gradient-to-br from-cyan-400 via-blue-600 to-slate-950 text-2xl font-black text-white">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/30" />
 
-      <span className="relative z-10">
-        {adminInitials}
-      </span>
+              <span className="relative z-10">
+                {adminInitials}
+              </span>
 
-      <div className="absolute left-3 top-3 h-4 w-4 rounded-full bg-white/25 blur-sm" />
-    </div>
-  </div>
+              <div className="absolute left-3 top-3 h-4 w-4 rounded-full bg-white/25 blur-sm" />
+            </div>
+          </div>
 
-  {/* Admin Name */}
-  <div className="min-w-0 text-right">
-    <h1 className={`truncate text-xl font-black sm:text-2xl ${headingClass}`}>
-      {user?.name || "مدیر سیستم"}
-    </h1>
+          {/* Admin Name */}
+          <div className="min-w-0 text-right">
+            <h1 className={`truncate text-xl font-black sm:text-2xl ${headingClass}`}>
+              {user?.name || "مدیر سیستم"}
+            </h1>
 
-    <p className={`mt-1 text-sm ${mutedClass}`}>
-      مدیر پنل TopMusic
-    </p>
+            <p className={`mt-1 text-sm ${mutedClass}`}>
+              مدیر پنل TopMusic
+            </p>
 
-    <div className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-emerald-500">
-      <FiCheckCircle size={14} />
-      حساب مدیریت
-    </div>
-         
-  </div>
-</div>
+            <div className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-emerald-500">
+              <FiCheckCircle size={14} />
+              حساب مدیریت
+            </div>
 
-      
+          </div>
+        </div>
+
+
 
         {/* Personal information */}
         <section className={cardClass}>
@@ -341,11 +333,10 @@ setUser({
               <button
                 type="button"
                 onClick={handleCancelEdit}
-                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
-                  isDark
-                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
+                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${isDark
+                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
               >
                 <FiX size={15} />
                 انصراف
@@ -423,11 +414,10 @@ setUser({
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div
-              className={`rounded-xl border p-4 ${
-                isDark
-                  ? "border-slate-700/60 bg-slate-950/40"
-                  : "border-slate-100 bg-slate-50"
-              }`}
+              className={`rounded-xl border p-4 ${isDark
+                ? "border-slate-700/60 bg-slate-950/40"
+                : "border-slate-100 bg-slate-50"
+                }`}
             >
               <p className={`mb-2 text-xs ${mutedClass}`}>نقش کاربری</p>
               <div className="flex items-center gap-2">
@@ -439,11 +429,10 @@ setUser({
             </div>
 
             <div
-              className={`rounded-xl border p-4 ${
-                isDark
-                  ? "border-slate-700/60 bg-slate-950/40"
-                  : "border-slate-100 bg-slate-50"
-              }`}
+              className={`rounded-xl border p-4 ${isDark
+                ? "border-slate-700/60 bg-slate-950/40"
+                : "border-slate-100 bg-slate-50"
+                }`}
             >
               <p className={`mb-2 text-xs ${mutedClass}`}>وضعیت حساب</p>
               <div className="flex items-center gap-2">
@@ -455,11 +444,10 @@ setUser({
             </div>
 
             <div
-              className={`rounded-xl border p-4 ${
-                isDark
-                  ? "border-slate-700/60 bg-slate-950/40"
-                  : "border-slate-100 bg-slate-50"
-              }`}
+              className={`rounded-xl border p-4 ${isDark
+                ? "border-slate-700/60 bg-slate-950/40"
+                : "border-slate-100 bg-slate-50"
+                }`}
             >
               <p className={`mb-2 text-xs ${mutedClass}`}>شناسه کاربر</p>
               <span
@@ -562,11 +550,10 @@ setUser({
 
         {/* Logout */}
         <section
-          className={`flex flex-col items-start justify-between gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center ${
-            isDark
-              ? "border-red-500/15 bg-red-500/[0.04]"
-              : "border-red-100 bg-red-50/70"
-          }`}
+          className={`flex flex-col items-start justify-between gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center ${isDark
+            ? "border-red-500/15 bg-red-500/[0.04]"
+            : "border-red-100 bg-red-50/70"
+            }`}
         >
           <div>
             <h2 className={`font-bold ${headingClass}`}>

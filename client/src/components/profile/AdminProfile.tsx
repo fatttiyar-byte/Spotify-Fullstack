@@ -15,7 +15,7 @@ import {
   getAllAlbums,
   type Song,
   type Album,
-} from "../../services/playlistService";
+} from "../../services/AdminMusicService";
 
 interface Props {
   user: {

@@ -42,7 +42,7 @@ export default function GlobalMusicPlayer() {
     nextSong,
     previousSong,
     seek,
-    changeVolume,
+   setVolume,
     toggleMute,
     toggleShuffle,
     toggleRepeat,
@@ -79,7 +79,7 @@ export default function GlobalMusicPlayer() {
   const handleVolumeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    changeVolume(Number(event.target.value));
+    setVolume(Number(event.target.value));
   };
 
   const handleSeek = (
