@@ -1,20 +1,5 @@
 
-import axios from "axios";
-import { useAuthStore } from "../../store/authStore";
-
-const api = axios.create({
-  baseURL: "http://localhost:4000/api/v1",
-});
-
-api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
-
-  if (token) {
-    config.headers.token = token;
-  }
-
-  return config;
-});
+import { userApi } from "../../services/api";
 
 interface ProfileResponse {
   success: boolean;
@@ -35,7 +20,7 @@ interface ApiResponse {
 export const updateProfile = async (
   payload: { name: string; email: string }
 ): Promise<ProfileResponse> => {
-  const { data } = await api.put<ProfileResponse>(
+  const { data } = await userApi.put<ProfileResponse>(
     "/user/update-profile",
     payload
   );
@@ -47,7 +32,7 @@ export const changePassword = async (payload: {
   currentPassword: string;
   newPassword: string;
 }): Promise<ApiResponse> => {
-  const { data } = await api.put<ApiResponse>(
+  const { data } = await userApi.put<ApiResponse>(
     "/user/change-password",
     payload
   );
@@ -56,7 +41,7 @@ export const changePassword = async (payload: {
 };
 
 export const logoutUser = async (): Promise<ApiResponse> => {
-  const { data } = await api.post<ApiResponse>("/user/logout");
+  const { data } = await userApi.post<ApiResponse>("/user/logout");
 
   return data;
 };

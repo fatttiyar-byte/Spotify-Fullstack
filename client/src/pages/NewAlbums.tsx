@@ -1,6 +1,6 @@
 
 import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+
 import {
   FiDisc,
   FiRefreshCw,
@@ -10,9 +10,7 @@ import {
 
 import AlbumCard, { type Album } from "../components/music/AlbumCard";
 import { useTheme } from "../context/ThemeContext";
-import { useAuthStore } from "../store/authStore";
-
-const API_URL = "http://localhost:5000/api/v1";
+import { musicApi } from "../services/api";
 
 type AlbumWithDate = Album & {
   created_at?: string;
@@ -36,8 +34,6 @@ export default function NewAlbums() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  const token = useAuthStore((state) => state.token);
-
   const [albums, setAlbums] = useState<AlbumWithDate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -47,9 +43,7 @@ export default function NewAlbums() {
       setLoading(true);
       setError("");
 
-      const response = await axios.get(`${API_URL}/album/all`, {
-        headers: token ? { token } : {},
-      });
+      const response = await musicApi.get("/album/all");
 
       const result = extractAlbums(response);
 
@@ -84,7 +78,7 @@ export default function NewAlbums() {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     fetchAlbums();

@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import { motion } from "framer-motion";
 
 import {
@@ -21,6 +20,7 @@ import SongCard, {
 
 import { useMusicPlayer } from "../context/MusicPlayerContext";
 import { useTheme } from "../context/ThemeContext";
+import { musicApi } from "../services/api";
 
 import {
   addToHistory,
@@ -28,8 +28,6 @@ import {
   isFavorite,
   toggleFavorite,
 } from "../utils/musicStorage";
-
-const API = "http://localhost:5000/api/v1";
 
 interface Album {
   id?: string | number;
@@ -112,8 +110,8 @@ export default function AlbumDetails() {
 
         const [albumResponse, albumsResponse] =
           await Promise.allSettled([
-            axios.get(`${API}/album/${id}`),
-            axios.get(`${API}/album/all`),
+            musicApi.get(`/album/${id}`),
+            musicApi.get("/album/all"),
           ]);
 
         let albumData: Album | null = null;

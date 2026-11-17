@@ -1,8 +1,8 @@
 
 import { useEffect, useState, type ChangeEvent } from "react";
 import { useSearchParams } from "react-router-dom";
-import axios from "axios";
 import { motion } from "framer-motion";
+
 import {
   FiSearch,
   FiPlay,
@@ -19,7 +19,7 @@ import {
   type Song,
 } from "../context/MusicPlayerContext";
 
-const API = "http://localhost:5000/api/v1";
+import { musicApi } from "../services/api";
 
 interface SearchResponse {
   success: boolean;
@@ -87,8 +87,8 @@ const Search = () => {
       );
 
       try {
-        const response = await axios.get<SearchResponse>(
-          `${API}/songs/search`,
+        const response = await musicApi.get<SearchResponse>(
+          "/songs/search",
           {
             params: {
               q: searchValue,
@@ -106,8 +106,13 @@ const Search = () => {
         setSongs(Array.isArray(result.songs) ? result.songs : []);
         setTotal(result.pagination?.total ?? 0);
         setTotalPages(result.pagination?.totalPages ?? 0);
-      } catch (err) {
-        if (axios.isCancel(err)) return;
+      } catch (err: any) {
+        if (
+          controller.signal.aborted ||
+          err.code === "ERR_CANCELED"
+        ) {
+          return;
+        }
 
         console.error("Search error:", err);
 
@@ -422,9 +427,6 @@ const Search = () => {
                       </p>
                     )}
                   </div>
-
-                
-                
                 </motion.div>
               );
             })}

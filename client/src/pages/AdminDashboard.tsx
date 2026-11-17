@@ -5,6 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
+
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -33,7 +34,7 @@ import {
   FiActivity,
 } from "react-icons/fi";
 
-import { useAuthStore } from "../store/authStore";
+import { userApi, adminApi } from "../services/api";
 import { useTheme } from "../context/ThemeContext";
 
 // -------------------- Types --------------------
@@ -70,48 +71,6 @@ interface Member {
 }
 
 type ModalType = "album" | "song" | null;
-
-// -------------------- API --------------------
-
-const userApi = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
-});
-
-const adminApi = axios.create({
-  baseURL: "http://localhost:4000/api/v1",
-});
-
-[userApi, adminApi].forEach((api) => {
-  api.interceptors.request.use((config) => {
-    const token = useAuthStore.getState().token;
-
-    if (token) {
-      config.headers.token = token;
-    }
-
-    return config;
-  });
-});
-
-// -------------------- Helpers --------------------
-
-function getArray<T>(data: any, key: string): T[] {
-  if (Array.isArray(data)) return data;
-  if (Array.isArray(data?.[key])) return data[key];
-  return [];
-}
-
-function getErrorMessage(error: unknown): string {
-  if (axios.isAxiosError(error)) {
-    return (
-      error.response?.data?.message ||
-      error.message ||
-      "ارتباط با سرور برقرار نشد."
-    );
-  }
-
-  return "خطای غیرمنتظره‌ای رخ داد.";
-}
 
 // -------------------- Floating Music Icons --------------------
 
@@ -222,6 +181,58 @@ function TextAreaField({
       />
     </label>
   );
+}
+
+// -------------------- Helper Functions --------------------
+
+function getArray<T>(data: any, key: string): T[] {
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  if (Array.isArray(data?.[key])) {
+    return data[key];
+  }
+
+  if (Array.isArray(data?.data?.[key])) {
+    return data.data[key];
+  }
+
+  return [];
+}
+
+function getErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.error;
+
+    if (typeof message === "string") {
+      return message;
+    }
+
+    if (error.response?.status === 401) {
+      return "نشست شما معتبر نیست. دوباره وارد شوید.";
+    }
+
+    if (error.response?.status === 403) {
+      return "شما اجازه انجام این عملیات را ندارید.";
+    }
+
+    if (error.response?.status === 404) {
+      return "مسیر درخواستی پیدا نشد.";
+    }
+
+    if (!error.response) {
+      return "ارتباط با سرور برقرار نشد.";
+    }
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "خطای غیرمنتظره‌ای رخ داد.";
 }
 
 // -------------------- Dashboard --------------------
@@ -1964,3 +1975,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

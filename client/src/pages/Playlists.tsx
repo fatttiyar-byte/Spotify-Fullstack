@@ -22,20 +22,19 @@ import {
   removeSongFromPlaylist,
 } from "../services/profileService";
 
+import { musicApi } from "../services/api";
 import { useAuthStore } from "../store/authStore";
 import { useTheme } from "../context/ThemeContext";
-
-const SONGS_URL = "http://localhost:5000/api/v1/song/all";
 
 type PlaylistItem =
   | string
   | number
   | Song
   | {
-    id?: string | number;
-    _id?: string | number;
-    songId?: string | number;
-  };
+      id?: string | number;
+      _id?: string | number;
+      songId?: string | number;
+    };
 
 const getSongId = (song: PlaylistItem): string => {
   if (typeof song === "string" || typeof song === "number") {
@@ -62,9 +61,9 @@ const extractPlaylist = (data: any): PlaylistItem[] => {
   const result = Array.isArray(data)
     ? data
     : data?.playlist ??
-    data?.data?.playlist ??
-    data?.data ??
-    [];
+      data?.data?.playlist ??
+      data?.data ??
+      [];
 
   return Array.isArray(result) ? result : [];
 };
@@ -136,7 +135,7 @@ export default function Playlists() {
       );
 
       try {
-        const songsResponse = await axios.get(SONGS_URL);
+        const songsResponse = await musicApi.get("/song/all");
         const allSongs = extractSongs(songsResponse.data);
 
         const matchedSongs = allSongs.filter((song) =>
@@ -155,7 +154,7 @@ export default function Playlists() {
       if (axios.isAxiosError(err)) {
         setError(
           err.response?.data?.message ||
-          "دریافت پلی‌لیست با مشکل مواجه شد."
+            "دریافت پلی‌لیست با مشکل مواجه شد."
         );
       } else {
         setError("خطایی رخ داده است. دوباره تلاش کنید.");
@@ -244,7 +243,6 @@ export default function Playlists() {
 
   return (
     <div className="space-y-6" dir="rtl">
-
       {/* Header */}
       <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
@@ -266,10 +264,11 @@ export default function Playlists() {
           type="button"
           onClick={fetchPlaylist}
           disabled={loading}
-          className={`inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-3 text-sm font-bold transition hover:border-blue-500 hover:text-blue-500 disabled:opacity-50 ${isDark
+          className={`inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-3 text-sm font-bold transition hover:border-blue-500 hover:text-blue-500 disabled:opacity-50 ${
+            isDark
               ? "border-white/10 bg-white/[0.04] text-slate-300"
               : "border-slate-200 bg-white text-slate-600"
-            }`}
+          }`}
         >
           <FiRefreshCw
             size={16}

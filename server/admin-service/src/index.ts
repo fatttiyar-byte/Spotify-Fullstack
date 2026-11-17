@@ -18,25 +18,17 @@ if (!process.env.REDIS_HOST || !process.env.REDIS_PORT || !process.env.REDIS_PAS
 }
 // بررسی وجود متغیرهای محیطی
 
+const useTLS = process.env.REDIS_TLS === "true";
+
 export const redisClient = createClient({
   password: process.env.REDIS_PASSWORD!,
-  //پسوورد ردیس
-    socket : {
-    //این مشخص میکنه پورت به کجا وصل شه
-    //چجوری وصل شه مثلا با ==>connecttime out or tls or reconnectstragy
-    //با عبارتی آدرس  و شرایط اتصال فیزیکی  را مشخص میکند
-    host: process.env.REDIS_HOST,
-    //هاست ردیس
+  socket: {
+    host: process.env.REDIS_HOST!,
     port: Number(process.env.REDIS_PORT),
-    //پورت ردیس که به عدد تبدیل میشه
-    tls:process.env.REDIS_TLS==='true',
-    //محافظت از محرمانگی داده ها و شنود 
-    //تضمین یکپارچگی داده ها  و جلوگیری از دستکاری داده ها 
-
+    ...(useTLS ? { tls: true as const } : {}),
     connectTimeout: 10000,
-    //حداکثر 10 ثانیه برای برقراری اتصال تلاش میکنه
   },
-})
+});
 
 redisClient.on('error', (err) => console.log('Redis Client Error:', err))
 //هر وقت کلاینت ردیس خطا داد  این تابع صدا زده بشه و خطا لاگ بشه
@@ -103,9 +95,12 @@ const port = process.env.PORT || 4000
 const startServer = async () => {
   
   await initDB()
-  app.listen(port, () => {
-    console.log(`✅ Server started on http://localhost:${port}`)
-  })
+  // app.listen(port, () => {
+  //   console.log(`✅ Server started on http://localhost:${port}`)
+  // })
+  app.listen(Number(port), "0.0.0.0", () => {
+  console.log(`✅ Admin server is running on port ${port}`)
+})
   //ترتیب مهم است اول منتظر میماند جدولها آماده شوند بعد سرور شروع به گوش دادن میکنه
   //هیچ درخواستی قبل آماده شدن دیتا بیس پذیرفته نمیشه
 }

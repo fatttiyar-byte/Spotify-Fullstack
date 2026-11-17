@@ -10,3 +10,7 @@ venv/
 .vscode/
 .idea/
 client/public
+.env.*
+!.env.example
+coverage/
+.cache/

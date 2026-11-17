@@ -1,28 +1,5 @@
-import axios from "axios";
-import { useAuthStore } from "../../store/authStore";
-// آدرس User Service
-const userApi = axios.create({
-  baseURL: "http://localhost:4000/api/v1",
-});
 
-// آدرس Admin Service
-const adminApi = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
-});
-
-// ارسال توکن برای احراز هویت
-const addToken = (config: any) => {
-  const token = useAuthStore.getState().token;
-
-  if (token) {
-    config.headers.token = token;
-  }
-
-  return config;
-};
-
-userApi.interceptors.request.use(addToken);
-adminApi.interceptors.request.use(addToken);
+import { userApi, adminApi } from "../../services/api";
 
 // ساختار آهنگ
 export interface Song {
