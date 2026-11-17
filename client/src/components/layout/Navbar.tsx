@@ -18,7 +18,7 @@ import {
   FiCheckCircle,
   FiGrid,
   FiX,
-  FiArrowUpLeft,
+
 } from "react-icons/fi";
 
 import { useTheme } from "../../context/ThemeContext";
