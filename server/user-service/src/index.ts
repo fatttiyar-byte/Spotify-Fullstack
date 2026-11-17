@@ -21,20 +21,24 @@ import userRoute from "./route.js";
 //     credentials: true,
 //   })
 // );
+
 const app = express();
 
 const allowedOrigins: string[] = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
+  "https://topmusic-frontend.onrender.com",
 ];
-
-if (process.env.CLIENT_URL) {
-  allowedOrigins.push(process.env.CLIENT_URL);
-}
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -46,22 +50,3 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1", userRoute);
-
-const port = Number(process.env.PORT) || 3000;
-
-const startServer = async () => {
-  try {
-    await connectDB();
-
-    // app.listen(port, () => {
-    app.listen(port, "0.0.0.0", () => {
-      console.log(`User service running on port ${port}`);
-      console.log(`API: http://localhost:${port}/api/v1`);
-    });
-  } catch (error) {
-    console.error("Failed to start user service:", error);
-    process.exit(1);
-  }
-};
-
-startServer();
