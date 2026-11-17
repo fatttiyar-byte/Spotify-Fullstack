@@ -98,7 +98,7 @@ async function initDB() {
 app.use('/api/v1', adminRoutes)
 //روت ها
 
-const port = process.env.PORT || 7000
+const port = process.env.PORT || 4000
 //پورت
 const startServer = async () => {
   

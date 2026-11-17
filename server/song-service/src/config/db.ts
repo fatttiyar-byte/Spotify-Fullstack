@@ -1,7 +1,6 @@
-import postgres from 'postgres'
-import dotenv from 'dotenv'
 
-dotenv.config()
+import 'dotenv/config'
+import postgres from 'postgres'
 
 const connectionString = process.env.DB_URL
 
@@ -9,4 +8,9 @@ if (!connectionString) {
   throw new Error('DB_URL environment variable is missing')
 }
 
-export const sql = postgres(connectionString)
+export const sql = postgres(connectionString, {
+  prepare: false,
+  max: 5,
+  idle_timeout: 20,
+  connect_timeout: 15,
+})

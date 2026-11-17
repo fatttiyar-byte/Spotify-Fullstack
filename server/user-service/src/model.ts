@@ -1,72 +1,65 @@
+
 import mongoose, { Document, Schema } from "mongoose";
 
-//داکیومنت یک تایپ است که ویژگی های مربوط به داکیومنت های مانگو را به اینترفیس اضافه میکند
-//اسکیما برای تعریف ساختار و قوانین  داده ها استفاده میشود
 export interface IUser extends Document {
-      ///تعریف اینترفیسی که از داکیومنت های مانگو هم استفاده میکنه
-      name: string;
-      email: string;
-      password: string;
-      role: "user" | "admin";
-      playlist: string[]
-      tokenVersion:number
+  name: string;
+  email: string;
+  password: string;
+  role: "user" | "admin";
+  playlist: string[];
+  tokenVersion: number;
+  favorites: string[];
+  profileImage: string;
 }
 
-const schema: Schema<IUser> = new Schema({
-      //ساخت اسکیما مطابق با ای یوزر
-      name: {
-            type: String,
-            required: true,
+const schema: Schema<IUser> = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
 
-      },
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      required: true,
+      unique: true,
+    },
 
-      email: {
-            lowercase: true,
-            trim: true,
-            //حذف فاصله بین حروف
-            required: true,
-            //ایمیل اجباریه
-            unique: true,
-            //ایمیل نباید تکراری باشه
-            type: String,
-            //نوع ایمیل باید استرینگ باشه
-      },
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+    },
 
-      password: {
-            type: String,
-            required: true,
-            //اجباری است
-            minlength: 8
-            //حداقل طولش 8 کاراکتر باشه
-      },
-      role: {
-            type: String,
+    profileImage: {
+      type: String,
+      default: "",
+    },
 
-            enum: ["user", "admin"],
-            //فقط این دو مقدار مجازن  یعنی یوزر و ادمین
-            default: "user",
-            //به صورت پیش فرض  روی کاربر تنظیم شده
-      },
-      tokenVersion: {
-            type: Number,
-            default: 0
-      },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
 
+    tokenVersion: {
+      type: Number,
+      default: 0,
+    },
 
-      playlist: [
-            {
-                  type: String,
-                  required: true,
-            }
-      ]
-},
+    playlist: {
+      type: [String],
+      default: [],
+    },
 
-      { timestamps: true });
-//زمان ساخت و اخرین تغییرات رو نشون میده
-//createdAt = 19:20  مثال:ا
-// updatedAt = 19:30
+    favorites: {
+      type: [String],
+      default: [],
+    },
+  },
+  { timestamps: true }
+);
 
-export const User = mongoose.model<IUser>("User", schema)
-
-
-
+export const User = mongoose.model<IUser>("User", schema);

@@ -1,3 +1,4 @@
+
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import type { NextFunction, Request, Response } from "express";
 import { User, type IUser } from "./model.js";
@@ -12,61 +13,65 @@ const isAuth = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // دریافت توکن از هدر درخواست
+    // دریافت توکن از هدر
     const token = req.headers.token as string;
 
     if (!token) {
       res.status(401).json({
-        message: "لطفاً ابتدا وارد حساب کاربری شوید."
+        success: false,
+        message: "لطفاً ابتدا وارد حساب کاربری شوید.",
       });
       return;
     }
 
-    // بررسی وجود JWT_SECRET
+    // بررسی JWT_SECRET
     const JWT_SEC = process.env.JWT_SEC;
 
     if (!JWT_SEC) {
       throw new Error("JWT_SEC در فایل env تعریف نشده است.");
     }
 
-    // بررسی اعتبار توکن و دریافت اطلاعات آن
+    // بررسی اعتبار توکن
     const decoded = jwt.verify(token, JWT_SEC) as JwtPayload;
 
     if (!decoded || !decoded._id) {
       res.status(401).json({
-        message: "توکن نامعتبر است."
+        success: false,
+        message: "توکن نامعتبر است.",
       });
       return;
     }
 
-    // پیدا کردن کاربر بر اساس آیدی داخل توکن
+    // دریافت کاربر
     const user = await User.findById(decoded._id).select("-password");
 
     if (!user) {
       res.status(401).json({
-        message: "کاربر یافت نشد."
+        success: false,
+        message: "کاربر یافت نشد.",
       });
       return;
     }
 
-    // بررسی نسخه توکن برای جلوگیری از استفاده مجدد از توکن باطل‌شده
+    // بررسی نسخه توکن
     const currentTokenVersion = user.tokenVersion ?? 0;
 
     if (decoded.tokenVersion !== currentTokenVersion) {
       res.status(401).json({
-        message: "توکن شما باطل شده است. لطفاً دوباره وارد شوید."
+        success: false,
+        message: "توکن شما باطل شده است. لطفاً دوباره وارد شوید.",
       });
       return;
     }
 
-    // ذخیره اطلاعات کاربر در req
+    // ذخیره اطلاعات کاربر
     req.user = user;
 
     next();
-
   } catch (error) {
     res.status(401).json({
-      message: "توکن نامعتبر است یا اعتبار آن به پایان رسیده است."
+      success: false,
+      message: "توکن نامعتبر است یا اعتبار آن به پایان رسیده است.",
     });
   }
 };
