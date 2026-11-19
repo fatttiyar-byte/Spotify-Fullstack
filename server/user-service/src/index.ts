@@ -1,5 +1,3 @@
-
-
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -10,9 +8,12 @@ import connectDB from "./config/db.js";
 import "./config/cloudinary.js";
 import userRoute from "./route.js";
 
+const app = express();
 
+const PORT = Number(process.env.PORT) || 4000;
 
-// app.use(بدون هاست
+const allowedOrigins = [
+  // app.use(بدون هاست
 //   cors({
 //     origin: [
 //       "http://localhost:5173",
@@ -21,10 +22,6 @@ import userRoute from "./route.js";
 //     credentials: true,
 //   })
 // );
-
-const app = express();
-
-const allowedOrigins: string[] = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "https://topmusic-frontend.onrender.com",
@@ -50,3 +47,19 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1", userRoute);
+
+// Connect database and start server
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`User Service running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start User Service:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
