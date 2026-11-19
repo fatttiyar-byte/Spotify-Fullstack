@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import {
-  FiActivity,
+ 
   FiArrowUp,
   FiDisc,
   FiHeart,
@@ -45,19 +45,7 @@ export default function Footer() {
     ? "border-white/[0.07]"
     : "border-slate-200";
 
-  const iconBox = `
-    flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center
-    rounded-xl border border-blue-400/30
-    bg-gradient-to-br from-blue-400 via-blue-600 to-indigo-800
-    text-white
-    shadow-[0_4px_0_#142c62,0_7px_12px_rgba(37,99,235,0.25),inset_0_1px_2px_rgba(255,255,255,0.5)]
-    transition-all duration-300
-    hover:-translate-y-1
-    hover:shadow-[0_6px_0_#142c62,0_12px_18px_rgba(37,99,235,0.3)]
-    active:translate-y-[2px]
-    active:shadow-[0_1px_0_#142c62]
-  `;
-
+ 
   const socialBox = `
     flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center
     rounded-xl border transition-all duration-300
