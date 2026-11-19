@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 
 import Navbar from "./components/layout/Navbar";
 import SideBar from "./components/layout/SideBar";
+import Footer from "./components/layout/Footer";
 import GlobalMusicPlayer from "./components/GlobalMusicPlayer";
 
 import Login from "./pages/Login";
@@ -76,16 +77,22 @@ function MainLayout({ children }: { children: ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <div
       dir="rtl"
-      className={`min-h-screen transition-colors duration-300 ${
-        theme === "dark"
-          ? "bg-[#080E1D] text-white"
-          : "bg-[#F4F7FC] text-[#14213D]"
-      }`}
+      className={`
+        flex min-h-screen w-full flex-col overflow-x-clip
+        transition-colors duration-300
+        ${
+          isDark
+            ? "bg-[#080E1D] text-white"
+            : "bg-[#F4F7FC] text-[#14213D]"
+        }
+      `}
     >
+      {/* سایدبار */}
       <SideBar
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
@@ -95,20 +102,41 @@ function MainLayout({ children }: { children: ReactNode }) {
         }
       />
 
+      {/* محتوای اصلی */}
       <div
-        className={`min-h-screen transition-[margin] duration-300 ease-in-out ${
-          sidebarCollapsed
-            ? "lg:mr-[80px]"
-            : "lg:mr-[270px]"
-        }`}
+        className={`
+          flex min-h-screen min-w-0 w-full flex-col
+          transition-[margin] duration-300 ease-in-out
+          ${
+            sidebarCollapsed
+              ? "lg:mr-[82px] lg:w-[calc(100%-82px)]"
+              : "lg:mr-[255px] lg:w-[calc(100%-255px)]"
+          }
+        `}
       >
+        {/* Navbar */}
         <Navbar
           onMenuClick={() => setMobileOpen(true)}
         />
 
-        <main className="p-4 pb-36 sm:p-6 sm:pb-36">
+        {/* Main */}
+        <main
+          className="
+            min-w-0 w-full flex-1
+            px-3 py-4
+            min-[480px]:px-4
+            sm:px-5 sm:py-6
+            lg:px-6 lg:py-7
+            xl:px-8
+          "
+        >
           {children}
         </main>
+
+        {/* Footer */}
+        <div className="mt-auto min-w-0 w-full">
+          <Footer />
+        </div>
       </div>
     </div>
   );
@@ -119,7 +147,7 @@ function AppContent() {
   return (
     <>
       <Routes>
-        {/* صفحات اصلی با Navbar و Sidebar */}
+        {/* صفحه اصلی */}
         <Route
           path="/"
           element={
@@ -129,7 +157,7 @@ function AppContent() {
           }
         />
 
-        {/* جستجوی موسیقی */}
+        {/* جستجو */}
         <Route
           path="/search"
           element={
@@ -149,7 +177,7 @@ function AppContent() {
           }
         />
 
-        {/* کاوش موسیقی */}
+        {/* آلبوم‌های جدید */}
         <Route
           path="/newalbum"
           element={
@@ -159,7 +187,7 @@ function AppContent() {
           }
         />
 
-        {/* ورود و ثبت نام */}
+        {/* ورود و ثبت‌نام */}
         <Route
           path="/login"
           element={<Login />}
@@ -192,7 +220,7 @@ function AppContent() {
           }
         />
 
-        {/* تاریخچه پخش */}
+        {/* تاریخچه */}
         <Route
           path="/history"
           element={
